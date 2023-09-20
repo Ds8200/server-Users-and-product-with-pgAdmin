@@ -9,6 +9,8 @@ import {
   handleAddProductToUser,
   handleDleleteAllProductToUser
 } from "../controllers/usersControllers";
+
+
 const router = express.Router();
 
 router.get("/", handleGetUsers);

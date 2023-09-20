@@ -3,8 +3,8 @@ import router from "./router/router";
 import chalk from "chalk";
 import morgan from "./logger/morgan";
 import cors from "./cors/cors";
-import { connectDb } from "./DB/pgAdmin_SQL";
-import { runQuery } from "./dataAccess/postgreSQL_DAL";
+import { connectDb } from "./db/pgAdmin_SQL";
+import { runQuery } from "./dal/pgAdminDal";
 
 const app = express();
 const PORT = 8181;
