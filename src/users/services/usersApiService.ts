@@ -45,17 +45,15 @@ export const updateUser = async (userId: string, userForUpdate: UserInterface): 
 };
 
 // Login
-export const login = async (userFromClient: UserInterface): Promise<string> => {
+export const login = async (userFromClient: UserInterface) => {
     const userInDB = await UserDAL.getUserByEmail(userFromClient.email);
     if (!userInDB) {
-        throw new Error('The email or password is incorrect');
+        throw new Error('The email is incorrect');
     }
 
     if (!comparePassword(userFromClient.password, userInDB[0].password)) {
-        throw new Error('The email or password is incorrect');
+        throw new Error('The password is incorrect');
     }
-
-    return 'You are logged in!';
 };
 
 // Delete user

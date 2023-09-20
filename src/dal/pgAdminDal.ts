@@ -1,5 +1,5 @@
 import UserInterface from '../users/interfaces/UserInterface';
-import { client } from '../db/pgAdmin_SQL';
+import { client } from '../db/pgAdmin_connect';
 import { getDate } from "../date/new-date";
 
 

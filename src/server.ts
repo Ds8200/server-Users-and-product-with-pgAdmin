@@ -3,7 +3,7 @@ import router from "./router/router";
 import chalk from "chalk";
 import morgan from "./logger/morgan";
 import cors from "./cors/cors";
-import { connectDb } from "./db/pgAdmin_SQL";
+import { connectDb } from "./db/pgAdmin_connect";
 import { runQuery } from "./dal/pgAdminDal";
 
 const app = express();

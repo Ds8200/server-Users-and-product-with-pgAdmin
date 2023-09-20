@@ -12,6 +12,10 @@ import {
 import { handleError } from "../../utils/handleErrors";
 import userValidation from "../models/joi/userValidation";
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 
 export const handleGetUsers = async (req: Request, res: Response) => {
@@ -79,9 +83,15 @@ export const handleLogin = async (req: Request, res: Response) => {
 
     const { error } = userValidation(userFromClient);
     if (error?.details[0].message) throw new Error(error?.details[0].message);
-
-    const token = await login(userFromClient);
-    return res.send(token);
+    await login(userFromClient);
+    
+    // Authenticate User.
+    const emailUser = { email: userFromClient.email };
+    
+    const accessToken = jwt.sign(emailUser, process.env.ACCESS_TOKEN_SELECT!, { expiresIn: '1h' })
+    console.log(accessToken)
+    
+    return res.send({ accessToken: accessToken });
   } catch (error) {
     handleError(res, error, 401);
   }
@@ -106,7 +116,7 @@ export const handleDleleteAllProductToUser = async (req: Request, res: Response)
   try {
     const { id } = req.params;
     const deleteCount = await deleteAllProductToUser(id);
-    return res.send({delete_count: deleteCount});
+    return res.send({ delete_count: deleteCount });
   } catch (error) {
     handleError(res, error);
   }
