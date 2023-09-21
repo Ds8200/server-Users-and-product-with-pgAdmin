@@ -1,6 +1,7 @@
 import { comparePassword, generateUserPassword } from "../helpers/bcrypt";
 import { UserDAL, ProductDAL } from '../../dal/pgAdminDal'; // Import ProductDAL as well
 import UserInterface from '../interfaces/UserInterface';
+import { userPg } from "../interfaces/UserInterface";
 
 
 type UserResult = Promise<UserInterface[] | null>;
@@ -45,8 +46,8 @@ export const updateUser = async (userId: string, userForUpdate: UserInterface): 
 };
 
 // Login
-export const login = async (userFromClient: UserInterface) => {
-    const userInDB = await UserDAL.getUserByEmail(userFromClient.email);
+export const login = async (userFromClient: UserInterface): Promise<userPg[] | null> => {
+    const userInDB: userPg[] | null = await UserDAL.getUserByEmail(userFromClient.email);
     if (!userInDB) {
         throw new Error('The email is incorrect');
     }
@@ -54,6 +55,8 @@ export const login = async (userFromClient: UserInterface) => {
     if (!comparePassword(userFromClient.password, userInDB[0].password)) {
         throw new Error('The password is incorrect');
     }
+
+    return userInDB;
 };
 
 // Delete user

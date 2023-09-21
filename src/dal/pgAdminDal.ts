@@ -1,4 +1,5 @@
 import UserInterface from '../users/interfaces/UserInterface';
+import { userPg } from '../users/interfaces/UserInterface';
 import { client } from '../db/pgAdmin_connect';
 import { getDate } from "../date/new-date";
 
@@ -20,13 +21,13 @@ export class UserDAL {
         return res.rows;
     }
 
-    static async getUserById(userId: string): Promise<UserInterface[] | null> {
+    static async getUserById(userId: string): Promise<userPg[] | null> {
         const queryString = 'SELECT * FROM schemaUsers.users WHERE user_id = $1';
         const res = await client.query(queryString, [userId]);
         return res.rows;
     }
 
-    static async getUserByEmail(email: string): Promise<UserInterface[] | null> {
+    static async getUserByEmail(email: string): Promise<userPg[] | null> {
         const queryString = 'SELECT * FROM schemaUsers.users WHERE email = $1';
         const res = await client.query(queryString, [email]);
         return res.rows;

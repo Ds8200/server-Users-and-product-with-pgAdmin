@@ -1,4 +1,5 @@
 import UserInterface from "../interfaces/UserInterface";
+import { userPg } from "../interfaces/UserInterface";
 import {
   getUsers,
   getUser,
@@ -12,10 +13,8 @@ import {
 import { handleError } from "../../utils/handleErrors";
 import userValidation from "../models/joi/userValidation";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv"
+import  JwtToken  from "../../token/token-jwt";
 
-dotenv.config()
 
 
 export const handleGetUsers = async (req: Request, res: Response) => {
@@ -83,15 +82,16 @@ export const handleLogin = async (req: Request, res: Response) => {
 
     const { error } = userValidation(userFromClient);
     if (error?.details[0].message) throw new Error(error?.details[0].message);
-    await login(userFromClient);
-    
+    const userRes: userPg[] | null = await login(userFromClient);
+    if (!userRes) throw new Error();
     // Authenticate User.
-    const emailUser = { email: userFromClient.email };
-    
-    const accessToken = jwt.sign(emailUser, process.env.ACCESS_TOKEN_SELECT!, { expiresIn: '1h' })
-    console.log(accessToken)
-    
-    return res.send({ accessToken: accessToken });
+    // אם המשתמש תקין, יצירת טוקן וריפרש טוקן
+    const accessToken = JwtToken.generateAccessToken({ id: userRes[0].user_id, email: userRes[0].email });
+    const refreshToken = JwtToken.generateRefreshToken({ id: userRes[0].user_id, email: userRes[0].email });
+    console.log(refreshToken)
+
+    // ושליחת טוקנים בתור תשובה
+    return res.json({ accessToken: accessToken, refreshToken: refreshToken });
   } catch (error) {
     handleError(res, error, 401);
   }
