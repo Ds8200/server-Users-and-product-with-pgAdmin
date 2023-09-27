@@ -84,13 +84,11 @@ export const handleLogin = async (req: Request, res: Response) => {
     if (error?.details[0].message) throw new Error(error?.details[0].message);
     const userRes: userPg[] | null = await login(userFromClient);
     if (!userRes) throw new Error();
-    // Authenticate User.
-    // אם המשתמש תקין, יצירת טוקן וריפרש טוקן
-    const accessToken = JwtToken.generateAccessToken({ id: userRes[0].user_id, email: userRes[0].email });
-    const refreshToken = JwtToken.generateRefreshToken({ id: userRes[0].user_id, email: userRes[0].email });
-    console.log(refreshToken)
 
-    // ושליחת טוקנים בתור תשובה
+    // Authenticate User.
+    const accessToken = JwtToken.generateAccessToken({ id: userRes[0].user_id, email: userRes[0].email });
+    const refreshToken = JwtToken.generateRefreshToken(res, { id: userRes[0].user_id, email: userRes[0].email });
+
     return res.json({ accessToken: accessToken, refreshToken: refreshToken });
   } catch (error) {
     handleError(res, error, 401);

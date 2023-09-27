@@ -25,7 +25,7 @@ export const getUser = async (userId: string): UserResult => {
 };
 
 // Create a new user
-export const register = async (user: UserInterface): UserResult => {
+export const register = async (user: UserInterface): Promise<UserInterface[] | null> => {
     user.password = generateUserPassword(user.password);
 
     await UserDAL.createUser(user);

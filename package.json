@@ -4,9 +4,9 @@
   "description": "express server exe",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon .",
     "ts": "tsc -w",
-    "start": "node ./server.ts"
+    "dev": "nodemon .",
+    "start": "node ./dist/server.js"
   },
   "author": "David Yakin",
   "license": "ISC",
